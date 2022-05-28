@@ -1,10 +1,6 @@
     Author: Nazmul Hassan
     Date: 28/05/2022
 
-`Install FastAPI wit all required Dependecies`
+Install FastAPI wit all required Dependecies `(pip install fastapi[all])`
 
-    pip install fastapi[all]
-
-`RUN APP`
-
-    uvicorn app.main:app --reload (--reload: Auto reload on save)
+RUN APP `(uvicorn app.main:app --reload (--reload: Auto reload on save))`
