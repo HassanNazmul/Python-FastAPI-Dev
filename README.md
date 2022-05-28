@@ -1,7 +1,5 @@
-```
-Author: Nazmul Hassan
-Date: 28/05/2022
-```
+    Author: Nazmul Hassan
+    Date: 28/05/2022
 
 ## INSTALLATION
 
