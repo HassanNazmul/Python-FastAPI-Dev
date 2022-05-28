@@ -14,3 +14,7 @@ RUN APP (--reload: Auto reload on save)
 Install psycopg2 PostgreSQL database adapter
 
     pip install psycopg2
+
+Install SQLalchemy The Database Toolkit for Python
+
+    pip install sqlalchemy
