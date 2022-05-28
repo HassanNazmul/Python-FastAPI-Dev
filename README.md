@@ -1,10 +1,18 @@
-    Author: Nazmul Hassan
-    Date: 28/05/2022
+```
+Author: Nazmul Hassan
+Date: 28/05/2022
+```
 
 ## INSTALLATION
 
-Install FastAPI wit all required Dependecies: `pip install fastapi[all]`
+Install FastAPI wit all required Dependecies
 
-RUN APP: `uvicorn app.main:app --reload` --reload: Auto reload on save
+    pip install fastapi[all]
 
-Install psycopg2 PostgreSQL database adapter: `pip install psycopg2`
+RUN APP (--reload: Auto reload on save)
+
+    uvicorn app.mainapp --reload
+
+Install psycopg2 PostgreSQL database adapter
+
+    pip install psycopg2
