@@ -2,7 +2,6 @@ from .database import engine, get_db
 from . import models
 from sqlalchemy.orm import Session
 from fastapi import FastAPI, HTTPException, Response, Depends, status
-from pydantic import BaseModel
 import psycopg2
 import time
 from psycopg2.extras import RealDictCursor
@@ -26,12 +25,6 @@ while True:  # Run While Loop
         print("Connection to database Failed")
         print("Error: ", error)
         time.sleep(10)  # If Database Not Connected Run the LOOP Again in 10sec
-
-
-class Post(BaseModel):
-    title: str
-    content: str
-    published: bool = True
 
 
 @app.get("/")
