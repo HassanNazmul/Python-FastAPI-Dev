@@ -12,12 +12,19 @@ class PostCreate(PostBase):
 
 
 class Post(BaseModel):
+    id: int
     title: str
     content: str
-    published: bool
 
     class Config:
-        orm_model = True
+        orm_mode = True
+
+
+# class Post(PostBase):
+#     id: int
+
+#     class Config:
+#         orm_mode = True
 
 
 # class Post(BaseModel):

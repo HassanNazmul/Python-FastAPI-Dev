@@ -5,6 +5,7 @@ from fastapi import FastAPI, HTTPException, Response, Depends, status
 import psycopg2
 import time
 from psycopg2.extras import RealDictCursor
+from typing import Optional, List
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -33,7 +34,7 @@ def root():
 
 
 # Get all posts using SQL Queries
-@app.get("/query/posts")
+@app.get("/query/posts", response_model=List[schemas.Post])
 def get_post():
     cursor.execute("""SELECT * FROM posts""")
     posts = cursor.fetchall()  # Fatching all post
@@ -42,7 +43,7 @@ def get_post():
 
 
 # Cteate new post using SQL Queries
-@app.post("/query/posts", status_code=201)
+@app.post("/query/posts", status_code=201, response_model=schemas.Post)
 def create_post(post: schemas.PostCreate):
     cursor.execute(
         """INSERT INTO posts (title, content, published) VALUES (%s, %s, %s) RETURNING *""",
@@ -55,7 +56,7 @@ def create_post(post: schemas.PostCreate):
 
 
 # Get post by ID using SQL Queries
-@app.get("/posts/{id}")
+@app.get("/posts/{id}", response_model=schemas.Post)
 def get_posts(id: int):
     cursor.execute("""SELECT * FROM posts WHERE id = %s """, (str(id)))
     post = cursor.fetchone()
@@ -81,7 +82,7 @@ def delete_post(id: int):
 
 
 # Update Post using SQL Queries
-@app.put("/posts/{id}")
+@app.put("/posts/{id}", response_model=schemas.Post)
 def update_post(id: int, post: schemas.PostCreate):
     cursor.execute(
         """UP id = %s RETURNING *""", (str(id)))
@@ -100,7 +101,7 @@ def update_post(id: int, post: schemas.PostCreate):
 
 
 # Get all posts using SQLalchemy / ORM
-@app.get("/orm/posts")
+@app.get("/orm/posts", response_model=List[schemas.Post])
 def get_post(db: Session = Depends(get_db)):
     post = db.query(models.Post).all()
 
@@ -108,7 +109,7 @@ def get_post(db: Session = Depends(get_db)):
 
 
 # Cteate new post using SQLalchemy / ORM
-@app.post("/orm/posts", status_code=201, response_model=schemas.Post)
+@app.post("/orm/posts", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
 def create_post(post: schemas.PostCreate, db: Session = Depends(get_db)):
     # new_post = models.Post(title=post.title, content=post.content,published=post.published)
     new_post = models.Post(**post.dict())  # Using Pydantic Model
@@ -121,7 +122,7 @@ def create_post(post: schemas.PostCreate, db: Session = Depends(get_db)):
 
 
 # Get post by ID using SQLalchemy / ORM
-@app.get("/orm/posts/{id}")
+@app.get("/orm/posts/{id}", response_model=schemas.Post)
 def get_posts(id: int, db: Session = Depends(get_db)):
     post = db.query(models.Post).filter(models.Post.id == id).first()
 
@@ -147,7 +148,7 @@ def delete_post(id: int, db: Session = Depends(get_db)):
 
 
 # Update Post using SQL Queries
-@app.put("/orm/posts/{id}")
+@app.put("/orm/posts/{id}", response_model=schemas.Post)
 def update_post(id: int, updated_post: schemas.PostCreate, db: Session = Depends(get_db)):
 
     post_query = db.query(models.Post).filter(models.Post.id == id)
