@@ -43,7 +43,7 @@ def get_post():
 
 # Cteate new post using SQL Queries
 @app.post("/query/posts", status_code=201)
-def create_post(post: schemas.Post):
+def create_post(post: schemas.PostCreate):
     cursor.execute(
         """INSERT INTO posts (title, content, published) VALUES (%s, %s, %s) RETURNING *""",
         (post.title, post.content, post.published))
@@ -82,7 +82,7 @@ def delete_post(id: int):
 
 # Update Post using SQL Queries
 @app.put("/posts/{id}")
-def update_post(id: int, post: schemas.Post):
+def update_post(id: int, post: schemas.PostCreate):
     cursor.execute(
         """UP id = %s RETURNING *""", (str(id)))
     post = cursor.fetchone()
@@ -95,17 +95,21 @@ def update_post(id: int, post: schemas.Post):
     return Response(status_code=HTTPException)
 
 
+###############################################################################################
+###############################################################################################
+
+
 # Get all posts using SQLalchemy / ORM
 @app.get("/orm/posts")
 def get_post(db: Session = Depends(get_db)):
     post = db.query(models.Post).all()
 
-    return {"detail": post}
+    return post
 
 
 # Cteate new post using SQLalchemy / ORM
-@app.post("/orm/posts", status_code=201)
-def create_post(post: schemas.Post, db: Session = Depends(get_db)):
+@app.post("/orm/posts", status_code=201, response_model=schemas.Post)
+def create_post(post: schemas.PostCreate, db: Session = Depends(get_db)):
     # new_post = models.Post(title=post.title, content=post.content,published=post.published)
     new_post = models.Post(**post.dict())  # Using Pydantic Model
 
@@ -113,7 +117,7 @@ def create_post(post: schemas.Post, db: Session = Depends(get_db)):
     db.commit()  # Save data changes on DB
     db.refresh(new_post)  # Refresh the DB
 
-    return{"detail": new_post}
+    return new_post
 
 
 # Get post by ID using SQLalchemy / ORM
@@ -123,7 +127,7 @@ def get_posts(id: int, db: Session = Depends(get_db)):
 
     if not post:
         raise HTTPException(status_code=404, detail="post not found")
-    return {"detail": post}
+    return post
 
 
 # Delete Post using SQLalchemy / ORM
@@ -144,7 +148,8 @@ def delete_post(id: int, db: Session = Depends(get_db)):
 
 # Update Post using SQL Queries
 @app.put("/orm/posts/{id}")
-def update_post(id: int, updated_post: schemas.Post, db: Session = Depends(get_db)):
+def update_post(id: int, updated_post: schemas.PostCreate, db: Session = Depends(get_db)):
+
     post_query = db.query(models.Post).filter(models.Post.id == id)
 
     post = post_query.first()
@@ -157,4 +162,4 @@ def update_post(id: int, updated_post: schemas.Post, db: Session = Depends(get_d
 
     conn.commit()  # Save data changes on DB
 
-    return {"detail": post_query.first()}
+    return post_query.first()
