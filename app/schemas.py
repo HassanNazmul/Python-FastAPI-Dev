@@ -55,7 +55,7 @@ class UserCreate(BaseModel):
 class UserOut(BaseModel):
     id: int
     email: EmailStr
-    # password: str
+    password: str
     created_at: datetime
 
     class Config:
