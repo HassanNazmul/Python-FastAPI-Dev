@@ -4,11 +4,14 @@ from sqlalchemy.orm import Session
 from app import models, schemas, utils
 from app.database import get_db
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/users",
+    tags=["USERS"]
+)
 
 
 # Get all users using SQLalchemy
-@router.get("/users", response_model=List[schemas.UserOut])
+@router.get("/", response_model=List[schemas.UserIdOut])
 def get_user(db: Session = Depends(get_db)):
     user = db.query(models.User).all()
 
@@ -16,7 +19,7 @@ def get_user(db: Session = Depends(get_db)):
 
 
 # Cteate new User using SQLalchemy
-@router.post("/users", status_code=201, response_model=schemas.UserOut)
+@router.post("/", status_code=201, response_model=schemas.UserOut)
 def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
     # Hash the password - user.passwoed
@@ -33,7 +36,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 
 # Get users by ID using SQLalchemy
-@router.get("/users/{id}", response_model=schemas.UserIDOut)
+@router.get("/{id}", response_model=schemas.UserIdOut)
 def get_user(id: int, db: Session = Depends(get_db)):
 
     user = db.query(models.User).filter(models.User.id == id).first()
@@ -46,7 +49,7 @@ def get_user(id: int, db: Session = Depends(get_db)):
 
 
 # Update Post using SQL Queries
-@router.put("/users/{id}", response_model=schemas.UserOut)
+@router.put("/{id}", response_model=schemas.UserIdOut)
 def update_user(id: int, updated_user: schemas.UserCreate, db: Session = Depends(get_db)):
 
     user_query = db.query(models.User).filter(models.User.id == id)
@@ -65,7 +68,7 @@ def update_user(id: int, updated_user: schemas.UserCreate, db: Session = Depends
 
 
 # Delete User using SQLalchemy
-@router.delete("/users/{id}")
+@router.delete("/{id}")
 def delete_user(id: int, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == id)
 

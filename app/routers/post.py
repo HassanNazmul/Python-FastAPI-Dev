@@ -5,11 +5,14 @@ from app import models, schemas
 from app.database import get_db
 
 
-router = APIRouter()
+router = APIRouter(
+    prefix="/posts",
+    tags=["POSTS"]
+)
 
 
 # Get all posts using SQLalchemy / ORM
-@router.get("/posts", response_model=List[schemas.Post])
+@router.get("/", response_model=List[schemas.Post])
 def get_post(db: Session = Depends(get_db)):
     post = db.query(models.Post).all()
 
@@ -17,7 +20,7 @@ def get_post(db: Session = Depends(get_db)):
 
 
 # Cteate new post using SQLalchemy / ORM
-@router.post("/posts", status_code=201, response_model=schemas.Post)
+@router.post("/", status_code=201, response_model=schemas.Post)
 def create_post(post: schemas.PostCreate, db: Session = Depends(get_db)):
     # new_post = models.Post(title=post.title, content=post.content,published=post.published)
     new_post = models.Post(**post.dict())  # Using Pydantic Model
@@ -30,7 +33,7 @@ def create_post(post: schemas.PostCreate, db: Session = Depends(get_db)):
 
 
 # Get post by ID using SQLalchemy / ORM
-@router.get("/posts/{id}", response_model=schemas.Post)
+@router.get("/{id}", response_model=schemas.Post)
 def get_posts(id: int, db: Session = Depends(get_db)):
     post = db.query(models.Post).filter(models.Post.id == id).first()
 
@@ -40,7 +43,7 @@ def get_posts(id: int, db: Session = Depends(get_db)):
 
 
 # Delete Post using SQLalchemy / ORM
-@router.delete("/posts/{id}")
+@router.delete("/{id}")
 def delete_post(id: int, db: Session = Depends(get_db)):
     post = db.query(models.Post).filter(models.Post.id == id)
 
@@ -56,7 +59,7 @@ def delete_post(id: int, db: Session = Depends(get_db)):
 
 
 # Update Post using SQL Queries
-@router.put("/posts/{id}", response_model=schemas.Post)
+@router.put("/{id}", response_model=schemas.Post)
 def update_post(id: int, updated_post: schemas.PostCreate, db: Session = Depends(get_db)):
 
     post_query = db.query(models.Post).filter(models.Post.id == id)

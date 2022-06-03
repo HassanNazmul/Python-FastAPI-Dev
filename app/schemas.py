@@ -2,14 +2,10 @@ from datetime import datetime
 from pydantic import BaseModel, EmailStr
 
 
-class PostBase(BaseModel):
+class PostCreate(BaseModel):
     title: str
     content: str
     published: bool = True
-
-
-class PostCreate(PostBase):
-    pass
 
 
 class Post(BaseModel):
@@ -22,37 +18,12 @@ class Post(BaseModel):
         orm_mode = True
 
 
-# class Post(PostBase):
-#     id: int
-
-#     class Config:
-#         orm_mode = True
-
-
-# class Post(BaseModel):
-#     title: str
-#     content: str
-#     published: bool = True
-
-
-# class CreatePost(BaseModel):
-#     title: str
-#     content: str
-#     published: bool = True
-
-
-# class UpdatePost(BaseModel):
-#     title: str
-#     content: str
-#     published: bool
-
-
 class UserCreate(BaseModel):
     email: EmailStr
     password: str
 
 
-class UserOut(BaseModel):
+class UserOut(BaseModel):  # Display User Info as response including Password
     id: int
     email: EmailStr
     password: str
@@ -62,7 +33,7 @@ class UserOut(BaseModel):
         orm_mode = True
 
 
-class UserIDOut(BaseModel):
+class UserIdOut(BaseModel):  # Display User Info as response without Password
     id: int
     email: EmailStr
     created_at: datetime
