@@ -18,3 +18,7 @@ Install psycopg2 PostgreSQL database adapter
 Install SQLalchemy The Database Toolkit for Python
 
     pip install sqlalchemy
+
+Install PassLib with Bcrypt for Password Hashes
+
+    pip install "passlib[bcrypt]"
