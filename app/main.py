@@ -97,7 +97,6 @@ def update_post(id: int, post: schemas.PostCreate):
 
 
 ###############################################################################################
-###############################################################################################
 
 
 # Get all posts using SQLalchemy / ORM
@@ -164,3 +163,19 @@ def update_post(id: int, updated_post: schemas.PostCreate, db: Session = Depends
     conn.commit()  # Save data changes on DB
 
     return post_query.first()
+
+
+###############################################################################################
+
+
+# Cteate new User using SQLalchemy
+@app.post("/users", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+
+    new_user = models.User(**user.dict())  # Using Pydantic Model
+
+    db.add(new_user)  # Add new post on BD
+    db.commit()  # Save data changes on DB
+    db.refresh(new_user)  # Refresh the DB
+
+    return new_user
