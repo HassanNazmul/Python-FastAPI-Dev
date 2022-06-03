@@ -7,7 +7,7 @@ from app.database import get_db
 router = APIRouter()
 
 
-# Get all users using SQLalchemy / ORM
+# Get all users using SQLalchemy
 @router.get("/users", response_model=List[schemas.UserOut])
 def get_user(db: Session = Depends(get_db)):
     user = db.query(models.User).all()
@@ -64,7 +64,7 @@ def update_user(id: int, updated_user: schemas.UserCreate, db: Session = Depends
     return user_query.first()
 
 
-# Delete User using SQLalchemy / ORM
+# Delete User using SQLalchemy
 @router.delete("/users/{id}")
 def delete_user(id: int, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == id)

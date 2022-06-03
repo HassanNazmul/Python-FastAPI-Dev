@@ -31,10 +31,10 @@ while True:  # Run While Loop
         time.sleep(10)  # If Database Not Connected Run the LOOP Again in 10sec
 
 
+app.include_router(post.router)
+app.include_router(user.router)
+
+
 @app.get("/")
 def root():
     return {"Message": "HELLO FAST-API"}
-
-
-app.include_router(post.router)
-app.include_router(user.router)
