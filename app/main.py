@@ -1,11 +1,10 @@
-from typing import List
-from .database import engine, get_db
-from . import models, schemas, utils
-from sqlalchemy.orm import Session
-from fastapi import FastAPI, HTTPException, Response, Depends, status
+from fastapi import FastAPI
+from .database import engine
+from . import models
 import psycopg2
-import time
 from psycopg2.extras import RealDictCursor
+import time
+
 
 from .routers import post, user
 
@@ -31,10 +30,10 @@ while True:  # Run While Loop
         time.sleep(10)  # If Database Not Connected Run the LOOP Again in 10sec
 
 
-app.include_router(post.router)
-app.include_router(user.router)
-
-
 @app.get("/")
 def root():
     return {"Message": "HELLO FAST-API"}
+
+
+app.include_router(post.router)
+app.include_router(user.router)
